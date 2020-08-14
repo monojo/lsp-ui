@@ -55,26 +55,6 @@
   (when (and (boundp 'winum-ignored-buffers-regexp) lsp-ui-doc-winum-ignore)
     (add-to-list 'winum-ignored-buffers-regexp lsp-ui-doc--buffer-prefix)))
 
-(defun lsp-ui-peek--render (major string)
-  "Fontified the chunk code buffer."
-  (let* ((h-start (+ (next-single-property-change 0 'face string) 1))
-         (h-end (+ (previous-single-property-change (length string) 'face string) 1)))
-
-    (with-temp-buffer
-      (insert string)
-      (delay-mode-hooks
-        (let ((inhibit-message t))
-          (funcall major)
-          )
-        (ignore-errors
-          (font-lock-ensure)
-          )
-        (add-face-text-property h-start h-end 'lsp-ui-peek-highlight t)
-        )
-      (buffer-string))
-    )
-  )
-
 (defun lsp-ui--workspace-path (path)
   "Return the PATH relative to the workspace.
 If the PATH is not in the workspace, it returns the original PATH."
