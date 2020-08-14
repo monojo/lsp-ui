@@ -333,26 +333,21 @@ XREFS is a list of references/definitions."
       list)))
 
 (defun lsp-ui-peek--render (major string)
-  (-let* ((xref-start (+ (next-single-property-change 0 'face string) 1))
-        (end (length string))
-        (xref-end (+ (previous-single-property-change end 'face string) 1)))
+  "Fontified the chunk code buffer."
+  (let ((xref-start (+ (next-single-property-change 0 'face string) 1))
+        (xref-end (+ (previous-single-property-change (length string) 'face string) 1)))
     (with-temp-buffer
       (insert string)
       (delay-mode-hooks
         (let ((inhibit-message t))
-          (funcall major))
+          (funcall major)
+          )
         (ignore-errors
-          (font-lock-ensure))
-        (add-face-text-property xref-start xref-end 'lsp-ui-peek-highlight t))
+          (font-lock-ensure)
+          )
+        (add-face-text-property xref-start xref-end 'lsp-ui-peek-highlight t)
+        )
       (buffer-string))))
-  ;(with-temp-buffer
-    ;(insert string)
-    ;(delay-mode-hooks
-      ;(let ((inhibit-message t))
-        ;(funcall major))
-      ;(ignore-errors
-        ;(font-lock-ensure)))
-    ;(buffer-string)))
 
 (defun lsp-ui-peek--peek ()
   "Show reference's chunk of code."
