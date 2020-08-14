@@ -334,8 +334,9 @@ XREFS is a list of references/definitions."
 
 (defun lsp-ui-peek--render (major string)
   "Fontified the chunk code buffer."
-  (let ((xref-start (+ (next-single-property-change 0 'face string) 1))
-        (xref-end (+ (previous-single-property-change (length string) 'face string) 1)))
+  (let* ((h-start (+ (next-single-property-change 0 'face string) 1))
+         (h-end (+ (previous-single-property-change (length string) 'face string) 1)))
+
     (with-temp-buffer
       (insert string)
       (delay-mode-hooks
@@ -345,12 +346,15 @@ XREFS is a list of references/definitions."
         (ignore-errors
           (font-lock-ensure)
           )
-        (add-face-text-property xref-start xref-end 'lsp-ui-peek-highlight t)
+        (add-face-text-property h-start h-end 'lsp-ui-peek-highlight t)
         )
-      (buffer-string))))
+      (buffer-string))
+    )
+  )
 
 (defun lsp-ui-peek--peek ()
   "Show reference's chunk of code."
+  (message "peek render")
   (-let* ((xref (lsp-ui-peek--get-selection))
           ((&plist :file file :chunk chunk) (or xref lsp-ui-peek--last-xref))
           (header (concat " " (lsp-ui--workspace-path file) "\n"))
