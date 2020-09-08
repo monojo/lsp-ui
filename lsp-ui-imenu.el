@@ -272,7 +272,7 @@ Return the updated COLOR-INDEX."
           (setq mode-line-format lsp-ui-imenu--custom-mode-line-format))
         (goto-char (point-min))
         (add-hook 'post-command-hook 'lsp-ui-imenu--post-command nil t)))
-    (let ((win (display-buffer-in-side-window imenu-buffer '((side . right)))))
+    (let ((win (display-buffer-in-side-window imenu-buffer '((side . left)))))
       (set-window-margins win 1)
       (select-window win)
       (set-window-start win 1)
